@@ -1,24 +1,30 @@
 package com.example.schedule.dto;
 
-import com.example.schedule.entity.Schedule;
+import com.example.domain.Schedule;
+import com.example.domain.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
+@AllArgsConstructor
 public class ScheduleResponseDto {
-
-    private final Long id;
-
-    private final String todoTitle;
-
-    private final String todoList;
-
-    public ScheduleResponseDto(Long id, String todoTitle, String todoList) {
-        this.id = id;
-        this.todoTitle = todoTitle;
-        this.todoList = todoList;
-    }
+    private final Long scheduleId;
+    private final String author;
+    private final String title;
+    private final String contents;
+    private final LocalDateTime createdDate;
+    private final LocalDateTime modifiedDate;
 
     public static ScheduleResponseDto toDto(Schedule schedule) {
-        return new ScheduleResponseDto(schedule.getId(), schedule.getTodoTitle(), schedule.getTodoList());
+        return new ScheduleResponseDto(
+                schedule.getScheduleId(),
+                schedule.getAuthor().getUserName(),
+                schedule.getTitle(),
+                schedule.getContents(),
+                schedule.getCreatedDate(),
+                schedule.getModifiedDate()
+        );
     }
 }

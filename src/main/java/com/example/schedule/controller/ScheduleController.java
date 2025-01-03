@@ -12,44 +12,50 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/schedules")
-@RequiredArgsConstructor
 public class ScheduleController {
 
+    // 속성
     private final ScheduleService scheduleService;
 
-    @PostMapping
-    public ResponseEntity<ScheduleResponseDto> save(@RequestBody ScheduleRequestDto requestDto) {
-
-        ScheduleResponseDto scheduleResponseDto = scheduleService.save(requestDto.getUsername(), requestDto.getTodoTitle(), requestDto.getTodoList());
-
-        return new ResponseEntity<>(scheduleResponseDto, HttpStatus.CREATED);
+    // 생성자
+    public ScheduleController(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
     }
 
+    // 기능
+    // 생성 Create
+    @PostMapping
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+
+        return new ResponseEntity<>(scheduleService.save(requestDto), HttpStatus.CREATED);
+    }
+
+    // 조회 Read(전체)
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAll() {
 
-        List<ScheduleResponseDto> scheduleResponseDtoList = scheduleService.findAll();
-
-        return new ResponseEntity<>(scheduleResponseDtoList, HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.findAll(), HttpStatus.OK);
     }
 
+    // 조회 Read(단건, id로 조회)
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> findById(@PathVariable Long id) {
-        ScheduleResponseDto scheduleResponseDto = scheduleService.findById(id);
+    public ResponseEntity<ScheduleResponseDto> findById(@PathVariable Long scheduleId) {
 
-        return new ResponseEntity<>(scheduleResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.findById(scheduleId), HttpStatus.OK);
     }
 
+    // 수정 Update
     @PatchMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id,@RequestBody ScheduleRequestDto requestDto) {
-        ScheduleResponseDto scheduleResponseDto = scheduleService.update(id, requestDto.getTodoTitle(), requestDto.getTodoList());
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long scheduleId,@RequestBody ScheduleRequestDto requestDto) {
 
-        return new ResponseEntity<>(scheduleResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.update(scheduleId, requestDto), HttpStatus.OK);
     }
 
+
+    // 삭제 Delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        scheduleService.delete(id);
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId) {
+        scheduleService.delete(scheduleId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
