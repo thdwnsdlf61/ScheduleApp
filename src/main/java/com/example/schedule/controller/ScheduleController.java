@@ -14,48 +14,48 @@ import java.util.List;
 @RequestMapping("/schedules")
 public class ScheduleController {
 
-    // 속성
+    // field
     private final ScheduleService scheduleService;
 
-    // 생성자
+    // constructor
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
     }
 
-    // 기능
-    // 생성 Create
+    // method
+    // Create
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+    public ResponseEntity<ScheduleResponseDto> createScheduleAPI(@RequestBody ScheduleRequestDto requestDto) {
 
-        return new ResponseEntity<>(scheduleService.save(requestDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(scheduleService.createSchedule(requestDto), HttpStatus.CREATED);
     }
 
-    // 조회 Read(전체)
+    // Read(전체)
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAll() {
+    public ResponseEntity<List<ScheduleResponseDto>> findAllScheduleAPI() {
 
-        return new ResponseEntity<>(scheduleService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.findAllSchedule(), HttpStatus.OK);
     }
 
-    // 조회 Read(단건, id로 조회)
-    @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> findById(@PathVariable Long scheduleId) {
+    // Read(단건, id로 조회)
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long scheduleId) {
 
         return new ResponseEntity<>(scheduleService.findById(scheduleId), HttpStatus.OK);
     }
 
-    // 수정 Update
-    @PatchMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long scheduleId,@RequestBody ScheduleRequestDto requestDto) {
+    // Update
+    @PatchMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> updateScheduleAPI(@PathVariable Long scheduleId, @RequestBody ScheduleRequestDto requestDto) {
 
-        return new ResponseEntity<>(scheduleService.update(scheduleId, requestDto), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, requestDto), HttpStatus.OK);
     }
 
 
-    // 삭제 Delete
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId) {
-        scheduleService.delete(scheduleId);
+    // Delete
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> deleteScheduleAPI(@PathVariable Long scheduleId) {
+        scheduleService.deleteSchedule(scheduleId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

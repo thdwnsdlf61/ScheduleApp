@@ -13,31 +13,30 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@Slf4j
 @Service
 public class ScheduleService {
-
-    // 속성
+    // field
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
 
-    // 생성자
+    // constructor
     public ScheduleService(ScheduleRepository scheduleRepository, UserRepository userRepository) {
         this.scheduleRepository = scheduleRepository;
         this.userRepository = userRepository;
     }
 
-    // 기능
-    // 생성
-    public ScheduleResponseDto save(ScheduleRequestDto requestDto) {
-        User user = userRepository.findByUserName(requestDto.getAuthor()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다. = " + requestDto.getAuthor()));
+    // method
+    // Create
+    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
+        User user = userRepository.findByUserName(requestDto.getAuthor()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다. = " + requestDto.getAuthor()));
         Schedule schedule = new Schedule(requestDto, user);
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return toDto(savedSchedule);
     }
 
-    // 조회(전체)
-    public List<ScheduleResponseDto> findAll() {
+    // Read(전체)
+    public List<ScheduleResponseDto> findAllSchedule() {
 
         return scheduleRepository.findAll()
                 .stream()
@@ -45,14 +44,14 @@ public class ScheduleService {
                 .toList();
     }
 
-    // 조회(단건, id로 조회)
+    // Read(단건, id로 조회)
     public ScheduleResponseDto findById(Long scheduleId) {
         Schedule schedule = findScheduleById(scheduleId);
         return toDto(schedule);
     }
 
-    // 수정
-    public ScheduleResponseDto update(Long scheduleId, ScheduleRequestDto requestDto) {
+    // Update
+    public ScheduleResponseDto updateSchedule(Long scheduleId, ScheduleRequestDto requestDto) {
         Schedule schedule = findScheduleById(scheduleId);
         schedule.updateSchedule(requestDto);
         scheduleRepository.save(schedule);
@@ -60,14 +59,14 @@ public class ScheduleService {
         return toDto(schedule);
     }
 
-    // 삭제
-    public void delete(Long scheduleId) {
+    // Delete
+    public void deleteSchedule(Long scheduleId) {
         scheduleRepository.deleteById(scheduleId);
     }
 
     private Schedule findScheduleById(Long scheduleId) {
         return scheduleRepository.findById(scheduleId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id가 존재하지 않습니다. = " + scheduleId));
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다. = " + scheduleId));
 
     }
 
