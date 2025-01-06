@@ -6,7 +6,7 @@ import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.domain.Schedule;
 import com.example.schedule.repository.ScheduleRepository;
 import com.example.user.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,10 +27,11 @@ public class ScheduleService {
 
     // method
     // Create
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
-        User user = userRepository.findByUserName(requestDto.getAuthor()).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다. = " + requestDto.getAuthor()));
-        Schedule schedule = new Schedule(requestDto, user);
+    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto, HttpSession session) {
+        String email = (String) session.getAttribute("sessionKey");
+        User author = userRepository.findByEmail(email).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다. = " + email));
+        Schedule schedule = new Schedule(requestDto, author);
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return toDto(savedSchedule);
     }

@@ -3,6 +3,7 @@ package com.example.schedule.controller;
 import com.example.schedule.dto.ScheduleRequestDto;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.service.ScheduleService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class ScheduleController {
     // method
     // Create
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createScheduleAPI(@RequestBody ScheduleRequestDto requestDto) {
-
-        return new ResponseEntity<>(scheduleService.createSchedule(requestDto), HttpStatus.CREATED);
+    public ResponseEntity<ScheduleResponseDto> createScheduleAPI(@RequestBody ScheduleRequestDto requestDto, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        return new ResponseEntity<>(scheduleService.createSchedule(requestDto, session), HttpStatus.CREATED);
     }
 
     // Read(전체)
